@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+venv_new/
+env/
+
+# Models and logs (keep structure, ignore contents)
+models/*/
+!models/.gitkeep
+logs/*.json
+
+# Dataset
+train.csv
+
+# IDE
+.vscode/
+.idea/
