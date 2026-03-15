@@ -138,12 +138,22 @@ if os.environ.get("DISABLE_AUTO_LOAD_MODEL") == "1":
 else:
     from model_loader import load_model
 
-    model, tokenizer, model_info = load_model()
-    max_len = model_info.get("config", {}).get("max_length", 128) if model_info else 128
-    device = next(model.parameters()).device
-    print("=" * 60)
-    print("[READY] API READY - Best model loaded successfully!")
-    print("=" * 60)
+    try:
+        model, tokenizer, model_info = load_model()
+        max_len = model_info.get("config", {}).get("max_length", 128) if model_info else 128
+        device = next(model.parameters()).device
+        print("=" * 60)
+        print("[READY] API READY - Best model loaded successfully!")
+        print("=" * 60)
+    except FileNotFoundError as exc:
+        if os.environ.get("REQUIRE_MODEL_ON_START", "0") == "1":
+            raise
+        logger.warning("Model unavailable at startup, running in degraded mode: %s", exc)
+        model = None
+        tokenizer = None
+        model_info = None
+        max_len = 128
+        device = torch.device("cpu")
 
 app.model = model
 app.tokenizer = tokenizer
@@ -249,6 +259,18 @@ def health_check():
 @log_request
 def predict_endpoint():
     try:
+        if app.model is None or app.tokenizer is None:
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "error": "Model not loaded",
+                        "message": "Model artifacts are unavailable. Upload backend/models/best_model or set MODEL_REPO_ID environment variable.",
+                    }
+                ),
+                503,
+            )
+
         data = request.get_json()
         if not data:
             return jsonify({"error": "No data provided", "status": "error"}), 400

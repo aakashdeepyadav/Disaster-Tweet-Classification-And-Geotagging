@@ -9,11 +9,18 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from typing import Optional, Tuple, Dict
 
 
-def find_best_model(models_dir: str = "models") -> Optional[str]:
+def _default_models_dir() -> str:
+    # backend/disaster_api/model/loader.py -> backend/models
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "models"))
+
+
+def find_best_model(models_dir: Optional[str] = None) -> Optional[str]:
     """
     Find the best trained model directory.
     Checks for best_model first, then falls back to other models.
     """
+    models_dir = models_dir or os.environ.get("MODELS_DIR") or _default_models_dir()
+
     # Priority order
     check_paths = [
         os.path.join(models_dir, "best_model"),
@@ -71,12 +78,36 @@ def load_model(model_path: Optional[str] = None, device: str = "auto") -> Tuple:
     Returns:
         (model, tokenizer, model_info) tuple
     """
+    models_dir = os.environ.get("MODELS_DIR") or _default_models_dir()
+
     if model_path is None:
-        model_path = find_best_model()
+        model_path = find_best_model(models_dir=models_dir)
+
+    # Optional cloud path: pull model artifacts from Hugging Face if missing.
+    if model_path is None and os.environ.get("MODEL_REPO_ID"):
+        repo_id = os.environ["MODEL_REPO_ID"]
+        revision = os.environ.get("MODEL_REVISION")
+        token = os.environ.get("HF_TOKEN")
+        target_dir = os.path.join(models_dir, "best_model")
+
+        os.makedirs(target_dir, exist_ok=True)
+        print(f"[INFO] No local model found. Downloading from Hugging Face repo: {repo_id}")
+
+        from huggingface_hub import snapshot_download
+
+        snapshot_download(
+            repo_id=repo_id,
+            local_dir=target_dir,
+            local_dir_use_symlinks=False,
+            revision=revision,
+            token=token,
+        )
+
+        model_path = find_best_model(models_dir=models_dir)
 
     if model_path is None:
         raise FileNotFoundError(
-            "No trained model found! Please run: python train_advanced.py"
+            "No trained model found. Provide backend/models/best_model or set MODEL_REPO_ID to download from Hugging Face."
         )
 
     # Determine device
