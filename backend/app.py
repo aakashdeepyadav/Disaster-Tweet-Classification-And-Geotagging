@@ -82,6 +82,10 @@ except Exception as exc:
 
 def check_venv():
     """Check if virtual environment is activated."""
+    # Allow cloud runtimes (Railway/Render/etc.) to bypass local venv enforcement.
+    if os.environ.get("SKIP_VENV_CHECK", "0") == "1":
+        return
+
     in_venv = hasattr(sys, "real_prefix") or (
         hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix
     )
