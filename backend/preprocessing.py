@@ -2,9 +2,15 @@
 Text preprocessing utilities for consistent data cleaning
 across training and inference.
 """
-import pandas as pd
+from __future__ import annotations
+
 import re
 from typing import Optional
+
+try:
+    import pandas as pd
+except Exception:  # pragma: no cover - runtime path when pandas is unavailable
+    pd = None
 
 
 def clean_text(text: str) -> str:
@@ -22,7 +28,12 @@ def clean_text(text: str) -> str:
     Returns:
         Cleaned text string
     """
-    if pd.isna(text) or not isinstance(text, str):
+    # Handle None/NaN/non-string values without requiring pandas at runtime.
+    if text is None:
+        return ""
+    if isinstance(text, float) and text != text:
+        return ""
+    if not isinstance(text, str):
         return ""
     
     # Remove URLs
@@ -58,6 +69,9 @@ def preprocess_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         Preprocessed dataframe
     """
+    if pd is None:
+        raise ImportError("pandas is required for preprocess_dataframe")
+
     print("Starting data preprocessing...")
     print(f"Initial dataset shape: {df.shape}")
     
@@ -148,6 +162,9 @@ def prepare_training_data(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         Preprocessed dataframe with 'full_text' column ready for training
     """
+    if pd is None:
+        raise ImportError("pandas is required for prepare_training_data")
+
     # Step 1: Clean and validate data
     df = preprocess_dataframe(df)
     
