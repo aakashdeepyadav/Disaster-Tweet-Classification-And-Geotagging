@@ -25,7 +25,8 @@ venv/
 venv_new/
 env/
 ENV/
-.venv
+.venv/
+.venv312/
 
 # IDE
 .vscode/
@@ -50,6 +51,7 @@ backend/train.csv
 
 # Node
 node_modules/
+frontend/dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

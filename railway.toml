@@ -1,6 +1,6 @@
 [build]
 builder = "RAILPACK"
-buildCommand = "cd backend && pip install -r requirements.txt"
+buildCommand = "cd backend && pip install --no-cache-dir -r requirements.txt"
 
 [deploy]
 startCommand = "cd backend && gunicorn -w 1 -k gthread --threads 4 -b 0.0.0.0:$PORT app:app"
