@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from "react";
 import "./App.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = (
+  import.meta.env.VITE_API_URL || "http://localhost:5000"
+).replace(/\/+$/, "");
 
 function App() {
   const [text, setText] = useState("");
