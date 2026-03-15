@@ -1,8 +1,10 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 flask>=2.3.0
 flask-cors>=4.0.0
 gunicorn>=21.2.0
-torch==2.2.2+cpu; platform_system == "Linux"
-torch>=2.0.0; platform_system != "Linux"
+torch==2.10.0+cpu; platform_system == "Linux"
+torch==2.10.0; platform_system != "Linux"
 transformers>=4.30.0
 geopy>=2.4.0
 geonamescache>=2.0.0
