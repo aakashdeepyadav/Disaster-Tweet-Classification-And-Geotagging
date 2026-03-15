@@ -88,6 +88,7 @@ function App() {
     <div className="page">
       <main className="shell">
         <header className="hero">
+          <p className="hero-kicker">Real-time NLP Incident Intelligence</p>
           <h1>
             Disaster Tweet Classification <span className="amp">&amp;</span>{" "}
             Geotagging
@@ -98,7 +99,7 @@ function App() {
           </p>
         </header>
 
-        <section className="panel">
+        <section className="panel panel-analyze">
           <h2>Analyze Tweet</h2>
           <div className="examples">
             {examples.map((item) => (
@@ -131,7 +132,7 @@ function App() {
           {error && <p className="error">{error}</p>}
         </section>
 
-        <section className="panel">
+        <section className="panel panel-result">
           <h2>Result</h2>
           {!result && <p className="muted">No prediction yet.</p>}
 
@@ -141,7 +142,7 @@ function App() {
                 <span
                   className={`verdict-badge ${result.disaster_label ? "verdict-disaster" : "verdict-safe"}`}
                 >
-                  {result.disaster_label ? "⚠ Disaster" : "✓ Safe"}
+                  {result.disaster_label ? "Disaster" : "Safe"}
                 </span>
                 <span className="verdict-conf">
                   {confidencePct}% confidence
@@ -217,7 +218,7 @@ function App() {
           )}
         </section>
 
-        <section className="panel">
+        <section className="panel panel-history">
           <h2>Recent Predictions</h2>
           {history.length === 0 && (
             <p className="muted">No recent predictions.</p>
@@ -247,7 +248,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="footer">Made with ❤️ by Aakash</footer>
+      <footer className="footer">Made with ❤️ by Aakash.</footer>
     </div>
   );
 }
