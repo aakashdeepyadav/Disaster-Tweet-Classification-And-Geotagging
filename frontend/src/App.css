@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -24,12 +24,23 @@
   --safe-bg: #f0fdf4;
   --safe-fg: #15803d;
   --safe-border: #bbf7d0;
+
+  --radius-lg: 14px;
+  --radius-md: 10px;
 }
 
 body {
-  font-family: "Inter", "Segoe UI", sans-serif;
-  background: linear-gradient(180deg, #f7faff 0%, var(--bg) 46%, #ecf2fb 100%);
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 85% 0%, rgba(30, 93, 227, 0.09), transparent 36%),
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(18, 83, 210, 0.06),
+      transparent 28%
+    ),
+    linear-gradient(180deg, #f7faff 0%, var(--bg) 46%, #ecf2fb 100%);
   color: var(--ink);
+  line-height: 1.45;
 }
 
 /* ── Layout ─────────────────────────────── */
@@ -42,12 +53,12 @@ body {
 }
 
 .shell {
-  max-width: 860px;
+  max-width: 900px;
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   flex: 1;
 }
 
@@ -55,16 +66,18 @@ body {
 
 .hero {
   background: linear-gradient(135deg, #1e5de3 0%, #0f4fcf 45%, #0b3ea5 100%);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 22px 26px;
   color: #fff;
-  box-shadow: 0 12px 28px rgba(15, 79, 207, 0.2);
+  box-shadow: 0 14px 34px rgba(15, 79, 207, 0.2);
 }
 
 .hero h1 {
+  font-family: "Sora", "Manrope", sans-serif;
   font-size: clamp(1.15rem, 2.4vw, 1.6rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .amp {
@@ -84,18 +97,41 @@ body {
 .panel {
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   padding: 18px 20px;
-  box-shadow: 0 10px 20px rgba(26, 35, 50, 0.04);
+  box-shadow: 0 10px 24px rgba(26, 35, 50, 0.05);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.panel:hover {
+  border-color: #c9d6ea;
+  box-shadow: 0 14px 28px rgba(26, 35, 50, 0.08);
+  transform: translateY(-1px);
 }
 
 .panel h2 {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
   font-size: 0.95rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted);
   margin-bottom: 14px;
+}
+
+.panel h2::after {
+  content: "";
+  display: inline-block;
+  width: 26px;
+  height: 2px;
+  margin-left: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), rgba(30, 93, 227, 0.15));
 }
 
 /* ── Examples ───────────────────────────── */
@@ -122,6 +158,14 @@ body {
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
+}
+
+.example-chip:focus-visible,
+.history-item:focus-visible,
+.button:focus-visible,
+.map-link:focus-visible {
+  outline: 3px solid rgba(30, 93, 227, 0.24);
+  outline-offset: 2px;
 }
 
 /* ── Form ───────────────────────────────── */
@@ -152,12 +196,21 @@ body {
   color: var(--ink);
   background: #fcfdff;
   line-height: 1.5;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.textarea::placeholder {
+  color: #8a99ab;
 }
 
 .textarea:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(30, 93, 227, 0.14);
+  background: #fff;
 }
 
 .button {
@@ -172,10 +225,16 @@ body {
   font-family: inherit;
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(30, 93, 227, 0.26);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .button:hover:enabled {
   background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(30, 93, 227, 0.26);
 }
 
 .button:disabled {
@@ -206,6 +265,10 @@ body {
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 16px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fbfdff 0%, #f4f8ff 100%);
 }
 
 .verdict-badge {
@@ -236,6 +299,7 @@ body {
 .result-rows {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .row {
@@ -327,11 +391,16 @@ body {
   cursor: pointer;
   font-family: inherit;
   text-align: left;
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    transform 0.18s ease;
 }
 
 .history-item:hover {
   border-color: var(--accent);
   background: #f1f6ff;
+  transform: translateY(-1px);
 }
 
 .history-text {
@@ -340,6 +409,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 72ch;
 }
 
 .badge {
@@ -365,7 +435,7 @@ body {
 /* ── Footer ─────────────────────────────── */
 
 .footer {
-  max-width: 860px;
+  max-width: 900px;
   width: 100%;
   margin: 20px auto 0;
   padding: 14px 0 22px;
@@ -375,15 +445,69 @@ body {
   border-top: 1px solid var(--line);
 }
 
+.hero,
+.panel {
+  animation: riseIn 420ms ease both;
+}
+
+.panel:nth-of-type(2) {
+  animation-delay: 70ms;
+}
+
+.panel:nth-of-type(3) {
+  animation-delay: 120ms;
+}
+
+.panel:nth-of-type(4) {
+  animation-delay: 170ms;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── Responsive ─────────────────────────── */
 
 @media (max-width: 600px) {
+  .page {
+    padding: 20px 12px 0;
+  }
+
   .hero {
     padding: 16px;
   }
 
   .panel {
     padding: 14px 16px;
+  }
+
+  .result-rows .row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .row-value {
+    text-align: left;
   }
 
   .button {
